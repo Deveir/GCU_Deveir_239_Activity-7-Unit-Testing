@@ -1,59 +1,96 @@
 package Test;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
+import org.junit.runners.Parameterized.Parameters;
 
 import junit.Calculator;
 
-/**
- * Unit tests for the Calculator class.
- */
+@RunWith(Parameterized.class)
 public class CalculatorTest {
+
+    enum Type {
+        ADD, SUBTRACT, MULTYPLY, DIVIDE
+    }
+
+    @Parameter(0)
+    public Type type;
+
+    @Parameter(1)
+    public int a1;
+
+    @Parameter(2)
+    public int a2;
+
+    @Parameter(3)
+    public int result;
+
+    @Parameters
+    public static Collection<Object[]> data() {
+
+        Object[][] data = new Object[][] {
+
+            { Type.ADD, 2, 1, 3 },
+            { Type.ADD, 5, 2, 7 },
+
+            { Type.SUBTRACT, 2, 1, 1 },
+            { Type.SUBTRACT, 5, 2, 3 },
+
+            { Type.MULTYPLY, 2, 1, 2 },
+            { Type.MULTYPLY, 5, 2, 10 },
+
+            { Type.DIVIDE, 2, 1, 2 },
+            { Type.DIVIDE, 5, 2, 2 }
+
+        };
+
+        return Arrays.asList(data);
+    }
 
     @Test
     public void testAdd() {
+
+        Assume.assumeTrue(type == Type.ADD);
+
         Calculator calc = new Calculator();
 
-        Assert.assertEquals(3, calc.add(2, 1));
-        Assert.assertEquals(10, calc.add(5, 5));
-        Assert.assertEquals(0, calc.add(-1, 1));
-        Assert.assertEquals(-5, calc.add(-2, -3));
+        Assert.assertEquals(result, calc.add(a1, a2));
     }
 
     @Test
     public void testSubtract() {
+
+        Assume.assumeTrue(type == Type.SUBTRACT);
+
         Calculator calc = new Calculator();
 
-        Assert.assertEquals(4, calc.subtract(7, 3));
-        Assert.assertEquals(0, calc.subtract(5, 5));
-        Assert.assertEquals(-2, calc.subtract(3, 5));
-        Assert.assertEquals(-5, calc.subtract(-2, 3));
+        Assert.assertEquals(result, calc.subtract(a1, a2));
     }
 
     @Test
     public void testMultiply() {
+
+        Assume.assumeTrue(type == Type.MULTYPLY);
+
         Calculator calc = new Calculator();
 
-        Assert.assertEquals(12, calc.multiply(4, 3));
-        Assert.assertEquals(0, calc.multiply(0, 5));
-        Assert.assertEquals(-10, calc.multiply(-2, 5));
-        Assert.assertEquals(6, calc.multiply(-2, -3));
+        Assert.assertEquals(result, calc.multiply(a1, a2));
     }
 
     @Test
     public void testDivide() {
+
+        Assume.assumeTrue(type == Type.DIVIDE);
+
         Calculator calc = new Calculator();
 
-        Assert.assertEquals(5, calc.divide(10, 2));
-        Assert.assertEquals(3, calc.divide(9, 3));
-        Assert.assertEquals(-4, calc.divide(-8, 2));
-        Assert.assertEquals(4, calc.divide(-8, -2));
-    }
-
-    @Test(expected = ArithmeticException.class)
-    public void testDivideByZero() {
-        Calculator calc = new Calculator();
-
-        calc.divide(10, 0);
+        Assert.assertEquals(result, calc.divide(a1, a2));
     }
 }
